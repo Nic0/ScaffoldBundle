@@ -40,11 +40,35 @@ EOT
 
     protected function execute (InputInterface $input, OutputInterface $output) 
     {
-        $bundle     = $input->getArgument('bundle');
-        $filename   = $input->getArgument('filename');
-        $path       = $input->getArgument('path');
+        // validate bundle
+        if (!preg_match('/Bundle$/', $bundle = $input->getArgument('bundle'))) {
+            throw new \InvalidArgumentException('The bundle must end with Bundle');
+        }
+
+        // validate that the namespace is at least one level deep
+        if (false === strpos($bundle, '\\')) {
+            throw new \InvalidArgumentException(
+                'The bundle must contain the vendor with quotes, exemple "vendors\MyBundle"');
+        }
+
+        // validate namespace
+        $path = $input->getArgument('path');
         $namespace  = $bundle.'\\Tests\\'.$path;
+
+        $namespace = strtr($namespace, '/', '\\');
+        if (preg_match('/[^A-Za-z0-9_\\\-]/', $namespace)) {
+            throw new \InvalidArgumentException('The namespace contains invalid characters.');
+        }
+
+        if (!preg_match('/Test$/', $filename = $input->getArgument('filename'))) {
+            throw new \InvalidArgumentException('The filename musts end with Test');
+        }
+
         $targetFile = 'src/'.strtr($bundle, '\\', '/').'/Tests/'.$path.'/'.$filename.'.php';
+
+        if (file_exists($targetFile)) {
+            throw new \RuntimeException(sprintf('The "%s" test file already exists.', $targetFile));
+        }
 
         $filesystem = $this->container->get('filesystem');
         $filesystem->copy(__DIR__.'/../Resources/skeleton/WebTestCase.php', $targetFile);
@@ -55,6 +79,5 @@ EOT
         ));
 
         $output->writeln('<info>[File+]</info> '.$targetFile);
-
     }
 }
