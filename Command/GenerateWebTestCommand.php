@@ -23,7 +23,7 @@ class GenerateWebTestCommand extends Command
     {
         $this
             ->setName('scaffold:webtest')
-            ->setDescription('scaffold a WebTestCase file')
+            ->setDescription('generate a WebTestCase file')
             ->setDefinition(array(
                 new InputArgument('bundle', InputArgument::REQUIRED, 'The bundle'),
                 new InputArgument('filename', InputArgument::REQUIRED, 'The name of the file'),

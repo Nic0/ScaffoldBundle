@@ -1,9 +1,7 @@
 <?php
 
 namespace Sweet\ScaffoldBundle\Tests\Command;
-/**
- * @see FOS/UserBundle/Tests/Command/CreateUserCommandTest
- */
+
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Sweet\ScaffoldBundle\Command\GenerateWebTestCommand;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
