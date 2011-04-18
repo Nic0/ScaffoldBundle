@@ -1,6 +1,6 @@
 <?php
 
-{{ namespace }}
+namespace {{ namespace }};
 
 class {{ nameClass }} extends \PHPUnit_Framework_TestCase
 {
