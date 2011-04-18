@@ -30,7 +30,13 @@ class GenerateWebTestCommandTest extends WebTestCase
         ));
 
         $this->assertRegExp('/\[File\+\]/', $tester->getDisplay());
-        $this->assertFileExists('src/Sweet/ScaffoldBundle/Tests/Controller/indexControllerTest.php');
+        $fullpath = 'src/Sweet/ScaffoldBundle/Tests/Controller/indexControllerTest.php';
+        $this->assertFileExists($fullpath);
+        
+        $content = fread(fopen($fullpath, 'r'), filesize($fullpath));
+        $this->assertContains('namespace Sweet\\ScaffoldBundle\\Tests\\Controller;', $content);
+        $this->assertContains('class indexControllerTest extends WebTestCase', $content);
+
     }
 
     protected function tearDown ()
