@@ -35,7 +35,7 @@ class GenerateUnitTestCommandTest extends WebTestCase
         
         $content = fread(fopen($fullpath, 'r'), filesize($fullpath));
         $this->assertContains('namespace Sweet\\ScaffoldBundle\\Tests\\Controller;', $content);
-        $this->assertContains('class indexControllerTest extends WebTestCase', $content);
+        $this->assertContains('class indexControllerTest extends \\PHPUnit_Framework_TestCase', $content);
 
     }
 
