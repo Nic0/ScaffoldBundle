@@ -51,6 +51,12 @@ EOT
                 'The bundle must contain the vendor with quotes, exemple "vendors\MyBundle"');
         }
 
+        if (!is_dir($bundleDir = 'src/'.strtr($bundle, '\\', '/'))) {
+            throw new \RuntimeException(sprintf(
+                'The directory %s doesn\'t exists, are you sure that it is the correct bundle ?', $bundleDir
+            ));
+        }
+
         // validate namespace
         $path = $input->getArgument('path');
         $namespace  = $bundle.'\\Tests\\'.$path;
@@ -71,7 +77,7 @@ EOT
         }
 
         $filesystem = $this->container->get('filesystem');
-        $filesystem->copy(__DIR__.'/../Resources/skeleton/WebTestCase.php', $targetFile);
+        $filesystem->copy(__DIR__.'/../Resources/skeleton/UnitTestCase.php', $targetFile);
 
         Mustache::renderFile($targetFile, array(
             'namespace' => $namespace,
