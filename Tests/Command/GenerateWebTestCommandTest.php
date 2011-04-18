@@ -10,7 +10,7 @@ use Symfony\Component\Console\Tester\ApplicationTester;
 
 class GenerateWebTestCommandTest extends WebTestCase
 {
-    public function testGenerateWebTestCommand ()
+    public function testGenerateWebTestFullCommand ()
     {
         $kernel = $this->createKernel();
         $command = new GenerateWebTestCommand();
@@ -37,11 +37,35 @@ class GenerateWebTestCommandTest extends WebTestCase
         $this->assertContains('namespace Sweet\\ScaffoldBundle\\Tests\\Controller;', $content);
         $this->assertContains('class indexControllerTest extends WebTestCase', $content);
 
-    }
-
-    protected function tearDown ()
-    {
         unlink('src/Sweet/ScaffoldBundle/Tests/Controller/indexControllerTest.php');
         rmdir('src/Sweet/ScaffoldBundle/Tests/Controller');
+    }
+
+    public function testGenerateWebTestCommand ()
+    {
+        $kernel = $this->createKernel();
+        $command = new GenerateWebTestCommand();
+        $application = new Application($kernel);
+        $application->setAutoExit(false);
+        $tester = new ApplicationTester($application);
+
+        $bundle     = 'Sweet\\ScaffoldBundle';
+        $filename   = 'indexControllerTest';
+
+        $tester->run(array(
+            'command'   => $command->getFullName(),
+            'bundle'    => $bundle,
+            'filename'  => $filename,
+        ));
+
+        $this->assertRegExp('/\[File\+\]/', $tester->getDisplay());
+        $fullpath = 'src/Sweet/ScaffoldBundle/Tests/indexControllerTest.php';
+        $this->assertFileExists($fullpath);
+        
+        $content = fread(fopen($fullpath, 'r'), filesize($fullpath));
+        $this->assertContains('namespace Sweet\\ScaffoldBundle\\Tests;', $content);
+        $this->assertContains('class indexControllerTest extends WebTestCase', $content);
+        
+        unlink('src/Sweet/ScaffoldBundle/Tests/indexControllerTest.php');
     }
 }

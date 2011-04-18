@@ -58,8 +58,11 @@ EOT
         }
 
         // validate namespace
+        $namespace  = $bundle.'\\Tests';
         $path = $input->getArgument('path');
-        $namespace  = $bundle.'\\Tests\\'.$path;
+        if (isset($path)) {
+            $namespace .= '\\'.$path;
+        }
 
         $namespace = strtr($namespace, '/', '\\');
         if (preg_match('/[^A-Za-z0-9_\\\-]/', $namespace)) {
